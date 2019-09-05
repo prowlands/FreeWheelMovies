@@ -1,6 +1,5 @@
 ﻿using FreeWheelMovies.Api.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Shouldly;
 using System.Net;
@@ -8,79 +7,43 @@ using Microsoft.EntityFrameworkCore;
 using FreeWheelMovies.Database.Data;
 using FreeWheelMovies.Api.Test.TestData;
 using FreeWheelMovies.Api.Models;
+using NUnit.Framework;
 
 namespace FreeWheelMovies.Api.Test
 {
-    [TestClass]
+    [TestFixture]
     public class MovieRatingsControllerTests
-    {
-        private MovieRatingsController _controller;
-        private MoviesContext _context;
-
-        public void SetUpWithRatings()
-        {
-            _controller = null;
-            _context = null;
-            var options = new DbContextOptionsBuilder<MoviesContext>()
-                  .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                  .Options;
-            _context = new MoviesContext(options);
-            MovieRatingsControllerTestDbInitialiser.Initialise(_context);
-
-            _controller = new MovieRatingsController(_context);
-        }
-
-        public void SetUpWithOutRatings()
-        {
-            _controller = null;
-            _context = null;
-            var options = new DbContextOptionsBuilder<MoviesContext>()
-                  .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                  .Options;
-            _context = new MoviesContext(options);
-            MovieRatingsControllerTestDbInitialiser.InitialiseWithNoRatings(_context);
-
-            _controller = new MovieRatingsController(_context);
-        }
-
-        [TestCleanup]
-        public void TearDown()
-        {
-            _controller = null;
-            _context = null;
-        }
-
-
-        [TestMethod]
+    {   
+        [Test]
         public void GetShouldReturnNotFoundIfNoMoviesFound()
         {
-            //ARRANGE            
-            SetUpWithOutRatings();
+            //ARRANGE
+            var controller = SetUpWithOutRatings();
 
             //ACT
-            var result = _controller.Get();
+            var result = controller.Get();
             var resultStatus = result as NotFoundResult;
 
             //ASSERT
             resultStatus.StatusCode.ShouldBe(404);
         }
 
-        [TestMethod]
+        [Test]
         public void GetShouldReturnOkIfMoviesFound() { }
 
-        [TestMethod]
+        [Test]
         public void GetByUserShouldReturnOkIfMoviesFound() { }
 
-        [TestMethod]
+        [Test]
         public void GetByUserShouldReturnNotFoundIfUserDoesntExist() { }
 
-        [TestMethod]
+        [Test]
         public void GetByUserShouldReturnNotFoundIfNoRatingsFound() { }
 
-        [TestMethod]
+        [Test]
         public void PostShouldReturnOkIfSaveSucceeds() {
-            //ARRANGE     
-            SetUpWithRatings();
+            //ARRANGE   
+            var controller = SetUpWithRatings();
             var request = new MovieRating
             {
                 MovieId = 1,
@@ -89,88 +52,111 @@ namespace FreeWheelMovies.Api.Test
             };
 
             //ACT
-            var result = _controller.Post(request);
-            var resultStatus = result as OkObjectResult;
+            var result = controller.Post(request);
+            var resultStatus = result as OkResult;
 
             //ASSERT
             resultStatus.StatusCode.ShouldBe(200);
         }
 
-        [TestMethod]
+        [Test]
         public void PostShouldReturnNotFoundIfUserDoesntExist() {
-            //ARRANGE            
-            SetUpWithRatings();
+            //ARRANGE           
             var request = new MovieRating
             {
-                MovieId = _context.Movies.SingleAsync(x => x.Title.Contains("Shawshank")).Id,
+                MovieId = 1,
                 UserId = 100,
                 Rating = 2
             };
+            var controller = SetUpWithRatings();
 
             //ACT
-            var result = _controller.Post(request);
+            var result = controller.Post(request);
             var resultStatus = result as NotFoundResult;
 
             //ASSERT
             resultStatus.StatusCode.ShouldBe(404);
         }
 
-        [TestMethod]
+        [Test]
         public void PostShouldReturnNotFoundIfMovieDoesntExist() {
-            //ARRANGE            
-            SetUpWithRatings();
+            //ARRANGE          
             var request = new MovieRating
             {
                 MovieId = 100,
-                UserId = _context.Users.SingleAsync(x => x.UserName == "Sarah").Id,
+                UserId = 2,
                 Rating = 2
             };
+            var controller = SetUpWithRatings();
 
             //ACT
-            var result = _controller.Post(request);
+            var result = controller.Post(request);
             var resultStatus = result as NotFoundResult;
 
             //ASSERT
             resultStatus.StatusCode.ShouldBe(404);
         }
 
-        [TestMethod]
+        [Test]
         public void PostShouldReturnBadRequestIfRatingIsTooLarge() {
-            //ARRANGE            
-            SetUpWithRatings();
+            //ARRANGE           
             var request = new MovieRating
             {
-                MovieId = _context.Movies.SingleAsync(x => x.Title.Contains("Shawshank")).Id,
-                UserId = _context.Users.SingleAsync(x => x.UserName == "Sarah").Id,
+                MovieId = 2,
+                UserId = 1,
                 Rating = 6
             };
+            var controller = SetUpWithRatings();
 
             //ACT
-            var result = _controller.Post(request);
+            var result = controller.Post(request);
             var resultStatus = result as BadRequestResult;
 
             //ASSERT
             resultStatus.StatusCode.ShouldBe(400);
         }
 
-        [TestMethod]
+        [Test]
         public void PostShouldReturnBadRequestIfRatingIsTooSmall()
         {
-            //ARRANGE            
-            SetUpWithRatings();
+            //ARRANGE          
             var request = new MovieRating
             {
-                MovieId = _context.Movies.SingleAsync(x => x.Title.Contains("Shawshank")).Id,
-                UserId = _context.Users.SingleAsync(x => x.UserName == "Sarah").Id,
+                MovieId = 1,
+                UserId = 1,
                 Rating = 0
             };
+            var controller = SetUpWithRatings();
 
             //ACT
-            var result = _controller.Post(request);
+            var result = controller.Post(request);
             var resultStatus = result as BadRequestResult;
 
             //ASSERT
             resultStatus.StatusCode.ShouldBe(400);
+        }
+
+
+        public MovieRatingsController SetUpWithRatings()
+        {
+            var options = new DbContextOptionsBuilder<MoviesContext>()
+                  .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                  .Options;
+            var context = new MoviesContext(options);
+            MovieRatingsControllerTestDbInitialiser.Initialise(context);
+
+            return new MovieRatingsController(context);
+        }
+
+        public MovieRatingsController SetUpWithOutRatings()
+        {
+            var options = new DbContextOptionsBuilder<MoviesContext>()
+                  .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                  .Options;
+            var context = new MoviesContext(options);
+            MovieRatingsControllerTestDbInitialiser.InitialiseWithNoRatings(context);
+
+            return new MovieRatingsController(context);
         }
     }
 }

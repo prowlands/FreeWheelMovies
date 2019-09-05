@@ -24,6 +24,12 @@ namespace FreeWheelMovies.Api.Controllers
         [HttpGet()]
         public IActionResult Get()
         {
+            //If no ratings have been recorded return not found
+            if (!_context.Ratings.Any())
+            {
+                return NotFound();
+            }
+
             var resultSet = _context.Movies.OrderByDescending(x => x.Ratings.Average(y => y.UserRating)).ThenBy(x => x.Title).Take(5);
 
             var returnedItems = resultSet.Select(x => new

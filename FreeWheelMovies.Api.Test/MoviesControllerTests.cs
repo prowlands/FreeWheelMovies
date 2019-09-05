@@ -1,22 +1,23 @@
 
 using FreeWheelMovies.Api.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using Shouldly;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using FreeWheelMovies.Database.Data;
 using FreeWheelMovies.Api.Test.TestData;
+using NUnit.Framework;
 
 namespace FreeWheelMovies.Api.Test
 {
-    [TestClass]
+    [TestFixture]
     public class MoviesControllerTests
     {
         private MoviesController _controller;
 
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
             var options = new DbContextOptionsBuilder<MoviesContext>()
@@ -29,7 +30,7 @@ namespace FreeWheelMovies.Api.Test
         }
 
 
-        [TestMethod]
+        [Test]
         public void GetShouldReturnNotFoundIfNoMoviesFound()
         {
             //ARRANGE            
@@ -43,7 +44,7 @@ namespace FreeWheelMovies.Api.Test
             resultStatus.StatusCode.ShouldBe(404);
         }
 
-        [TestMethod]
+        [Test]
         public void GetShouldReturnBadRequestForInvalidRequest()
         {
             //ARRANGE
@@ -57,7 +58,7 @@ namespace FreeWheelMovies.Api.Test
             resultStatus.StatusCode.ShouldBe(400);
         }
 
-        [TestMethod]
+        [Test]
         public void GetShouldReturnOkForValidRequest()
         {
             //ARRANGE            

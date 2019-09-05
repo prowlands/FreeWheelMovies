@@ -18,10 +18,8 @@ namespace FreeWheelMovies.Api.Test.TestData
                 return;
             }
 
-            AddGenres(context);
             AddUsers(context);
             AddMovies(context);
-            AddMovieGenres(context);
             AddRatings(context);
         }
 
@@ -33,43 +31,21 @@ namespace FreeWheelMovies.Api.Test.TestData
                 return;
             }
 
-            AddGenres(context);
             AddUsers(context);
             AddMovies(context);
-            AddMovieGenres(context);
-            //AddRatings(context);
         }
 
-        private static void AddGenres(MoviesContext context)
-        {
-            var genresToAdd = new Genre[]
-            {
-                new Genre { GenreName = "Thriller"},
-                new Genre { GenreName = "Comedy"},
-                new Genre { GenreName = "SciFi"},
-                new Genre { GenreName = "Action"},
-                new Genre { GenreName = "Drama"},
-                new Genre { GenreName = "History"},
-                new Genre { GenreName = "Documentary"},
-            };
-
-            foreach (Genre m in genresToAdd)
-            {
-                context.Genres.Add(m);
-            }
-            context.SaveChanges();
-        }
 
         private static void AddUsers(MoviesContext context)
         {
             var usersToAdd = new User[]
             {
-                new User { UserName = "Tony" },
-                new User { UserName = "Sarah" },
-                new User { UserName = "Anna" },
-                new User { UserName = "Bob" },
-                new User { UserName = "Alice" },
-                new User { UserName = "John" },
+                new User { Id = 1, UserName = "Tony" },
+                new User { Id = 2, UserName = "Sarah" },
+                new User { Id = 3, UserName = "Anna" },
+                new User { Id = 4, UserName = "Bob" },
+                new User { Id = 5, UserName = "Alice" },
+                new User { Id = 6, UserName = "John" },
             };
 
             foreach (User u in usersToAdd)
@@ -85,64 +61,39 @@ namespace FreeWheelMovies.Api.Test.TestData
             {
                 new Movie
                 {
+                    Id = 1,
                     Title = "The Shawshank Redemption",
                     ReleaseYear = new DateTime(1994,1,1),
                     RunningTime = 142
                 },
                 new Movie
                 {
+                    Id = 2,
                     Title = "The Godfather",
                     ReleaseYear = new DateTime(1972,1,1),
                     RunningTime = 175
                 },
                 new Movie
                 {
+                    Id = 3,
                     Title = "The Godfather - Part II",
                     ReleaseYear = new DateTime(1974,1,1),
                     RunningTime = 202
                 },
                 new Movie
                 {
+                    Id = 4,
                     Title = "The Dark Knight",
                     ReleaseYear = new DateTime(2008,1,1),
                     RunningTime = 152
                 },
                 new Movie
                 {
+                    Id = 5,
                     Title = "12 Angry Men",
                     ReleaseYear = new DateTime(1957,1,1),
                     RunningTime = 96
-                },
-                new Movie
-                {
-                    Title = "Schindler's List",
-                    ReleaseYear = new DateTime(1993,1,1),
-                    RunningTime = 195
-                },
-                new Movie
-                {
-                    Title = "The Lord of the Rings: The Return of the King",
-                    ReleaseYear = new DateTime(2003,1,1),
-                    RunningTime = 201
-                },
-                new Movie
-                {
-                    Title = "Pulp Fiction",
-                    ReleaseYear = new DateTime(1994,1,1),
-                    RunningTime = 154
-                },
-                new Movie
-                {
-                    Title = "The Good, the Bad and the Ugly",
-                    ReleaseYear = new DateTime(1966,1,1),
-                    RunningTime = 148
-                },
-                new Movie
-                {
-                    Title = "Fight Club",
-                    ReleaseYear = new DateTime(1999,1,1),
-                    RunningTime = 139
-                },
+                }
             };
 
             foreach (Movie m in moviesToAdd)
@@ -152,50 +103,6 @@ namespace FreeWheelMovies.Api.Test.TestData
             context.SaveChanges();
         }
 
-        private static void AddMovieGenres(MoviesContext context)
-        {
-            var shawshankId = context.Movies.Single(x => x.Title == "The Shawshank Redemption").Id;
-            var godfatherId = context.Movies.Single(x => x.Title == "The Godfather").Id;
-            var godfather2Id = context.Movies.Single(x => x.Title == "The Godfather - Part II").Id;
-            var darkKnightId = context.Movies.Single(x => x.Title == "The Dark Knight").Id;
-            var angryMenId = context.Movies.Single(x => x.Title == "12 Angry Men").Id;
-            var schindlerId = context.Movies.Single(x => x.Title == "Schindler's List").Id;
-            var lotrId = context.Movies.Single(x => x.Title == "The Lord of the Rings: The Return of the King").Id;
-            var pulpFictionId = context.Movies.Single(x => x.Title == "Pulp Fiction").Id;
-            var goodBadUglyId = context.Movies.Single(x => x.Title == "The Good, the Bad and the Ugly").Id;
-            var fighClubId = context.Movies.Single(x => x.Title == "Fight Club").Id;
-
-            var tonyId = context.Users.Single(x => x.UserName == "Tony").Id;
-            var sarahId = context.Users.Single(x => x.UserName == "Sarah").Id;
-            var annaId = context.Users.Single(x => x.UserName == "Anna").Id;
-            var bobId = context.Users.Single(x => x.UserName == "Bob").Id;
-            var aliceId = context.Users.Single(x => x.UserName == "Alice").Id;
-            var johnId = context.Users.Single(x => x.UserName == "John").Id;
-
-            var thrillerId = context.Genres.Single(x => x.GenreName == "Thriller").Id;
-            var comedyId = context.Genres.Single(x => x.GenreName == "Comedy").Id;
-            var sciFiId = context.Genres.Single(x => x.GenreName == "SciFi").Id;
-            var actionId = context.Genres.Single(x => x.GenreName == "Action").Id;
-            var dramaId = context.Genres.Single(x => x.GenreName == "Drama").Id;
-            var historyId = context.Genres.Single(x => x.GenreName == "History").Id;
-            var docoId = context.Genres.Single(x => x.GenreName == "Documentary").Id;
-
-            var movieGenresToAdd = new MovieGenre[]
-            {
-                new MovieGenre{ MovieId = shawshankId, GenreId = thrillerId },
-                new MovieGenre{ MovieId = godfatherId, GenreId = thrillerId },
-                new MovieGenre{ MovieId = godfatherId, GenreId = actionId },
-                new MovieGenre{ MovieId = godfatherId, GenreId = dramaId },
-                new MovieGenre{ MovieId = schindlerId, GenreId = historyId},
-                new MovieGenre{ MovieId = schindlerId, GenreId = dramaId },
-            };
-
-            foreach (MovieGenre mg in movieGenresToAdd)
-            {
-                context.MovieGenres.Add(mg);
-            }
-            context.SaveChanges();
-        }
 
         private static void AddRatings(MoviesContext context)
         {
@@ -204,26 +111,12 @@ namespace FreeWheelMovies.Api.Test.TestData
             var godfather2Id = context.Movies.Single(x => x.Title == "The Godfather - Part II").Id;
             var darkKnightId = context.Movies.Single(x => x.Title == "The Dark Knight").Id;
             var angryMenId = context.Movies.Single(x => x.Title == "12 Angry Men").Id;
-            var schindlerId = context.Movies.Single(x => x.Title == "Schindler's List").Id;
-            var lotrId = context.Movies.Single(x => x.Title == "The Lord of the Rings: The Return of the King").Id;
-            var pulpFictionId = context.Movies.Single(x => x.Title == "Pulp Fiction").Id;
-            var goodBadUglyId = context.Movies.Single(x => x.Title == "The Good, the Bad and the Ugly").Id;
-            var fighClubId = context.Movies.Single(x => x.Title == "Fight Club").Id;
-
             var tonyId = context.Users.Single(x => x.UserName == "Tony").Id;
             var sarahId = context.Users.Single(x => x.UserName == "Sarah").Id;
             var annaId = context.Users.Single(x => x.UserName == "Anna").Id;
             var bobId = context.Users.Single(x => x.UserName == "Bob").Id;
             var aliceId = context.Users.Single(x => x.UserName == "Alice").Id;
             var johnId = context.Users.Single(x => x.UserName == "John").Id;
-
-            var thrillerId = context.Genres.Single(x => x.GenreName == "Thriller").Id;
-            var comedyId = context.Genres.Single(x => x.GenreName == "Comedy").Id;
-            var sciFiId = context.Genres.Single(x => x.GenreName == "SciFi").Id;
-            var actionId = context.Genres.Single(x => x.GenreName == "Action").Id;
-            var dramaId = context.Genres.Single(x => x.GenreName == "Drama").Id;
-            var historyId = context.Genres.Single(x => x.GenreName == "History").Id;
-            var docoId = context.Genres.Single(x => x.GenreName == "Documentary").Id;
 
             var ratingsToAdd = new Rating[]
             {
@@ -259,12 +152,6 @@ namespace FreeWheelMovies.Api.Test.TestData
                 },
                 new Rating
                 {
-                    MovieId = fighClubId,
-                    UserId = bobId,
-                    UserRating = 3
-                },
-                new Rating
-                {
                     MovieId = darkKnightId,
                     UserId = annaId,
                     UserRating = 5
@@ -279,42 +166,6 @@ namespace FreeWheelMovies.Api.Test.TestData
                 {
                     MovieId = godfatherId,
                     UserId = sarahId,
-                    UserRating = 5
-                },
-                new Rating
-                {
-                    MovieId = pulpFictionId,
-                    UserId = sarahId,
-                    UserRating = 2
-                },
-                new Rating
-                {
-                    MovieId = pulpFictionId,
-                    UserId = annaId,
-                    UserRating = 4
-                },
-                new Rating
-                {
-                    MovieId = pulpFictionId,
-                    UserId = bobId,
-                    UserRating = 3
-                },
-                new Rating
-                {
-                    MovieId = goodBadUglyId,
-                    UserId = bobId,
-                    UserRating = 4
-                },
-                new Rating
-                {
-                    MovieId = schindlerId,
-                    UserId = johnId,
-                    UserRating = 2
-                },
-                new Rating
-                {
-                    MovieId = lotrId,
-                    UserId = johnId,
                     UserRating = 5
                 },
             };
