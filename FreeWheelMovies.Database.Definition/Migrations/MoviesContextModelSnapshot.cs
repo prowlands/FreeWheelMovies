@@ -49,7 +49,7 @@ namespace FreeWheelMovies.Database.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("FreeWheelMovies.Database.Models.MovieGenres", b =>
+            modelBuilder.Entity("FreeWheelMovies.Database.Models.MovieGenre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,7 +102,7 @@ namespace FreeWheelMovies.Database.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("FreeWheelMovies.Database.Models.MovieGenres", b =>
+            modelBuilder.Entity("FreeWheelMovies.Database.Models.MovieGenre", b =>
                 {
                     b.HasOne("FreeWheelMovies.Database.Models.Genre", "Genre")
                         .WithMany("MovieGenres")

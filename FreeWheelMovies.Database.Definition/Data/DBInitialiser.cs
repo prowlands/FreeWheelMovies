@@ -216,7 +216,7 @@ namespace FreeWheelMovies.Database.Data
                 },
                 new Rating
                 {
-                    MovieId = godfatherId,
+                    MovieId = goodBadUglyId,
                     UserId = sarahId,
                     UserRating = 5
                 },

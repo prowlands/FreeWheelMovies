@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FreeWheelMovies.Api.Models;
 using FreeWheelMovies.Database.Data;
 using FreeWheelMovies.Database.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -35,13 +36,13 @@ namespace FreeWheelMovies.Api.Controllers
                 return NotFound();
             }
 
-            var returnedItems = resultSet.Select(x => new
+            var returnedItems = resultSet.Select(x => new RatedMovie
             {
                 id = x.Id,
                 title = x.Title,
-                yearOfRelease = x.ReleaseYear.Year,
+                yearOfRelease = x.ReleaseYear,
                 runningTime = x.RunningTime,
-                averageRating = x.Ratings?.Average(y => y.UserRating)
+                averageRating = _context.Ratings.Where(y => y.MovieId == x.Id).Average(y => y.UserRating).RoundToNearestHalf()
             });
 
             return Ok(returnedItems);

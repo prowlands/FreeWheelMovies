@@ -30,16 +30,27 @@ namespace FreeWheelMovies.Api.Controllers
                 return NotFound();
             }
 
-            var resultSet = _context.Movies.OrderByDescending(x => x.Ratings.Average(y => y.UserRating)).ThenBy(x => x.Title).Take(5);
-
-            var returnedItems = resultSet.Select(x => new
+            var averageRatings = _context.Ratings.GroupBy(x => new { ID = x.MovieId }).Select(x => new
             {
-                id = x.Id,
-                title = x.Title,
-                yearOfRelease = x.ReleaseYear.Year,
-                runningTime = x.RunningTime,
-                averageRating = x.Ratings.Average(y => y.UserRating)
+                averageRating = x.Average(y => y.UserRating).RoundToNearestHalf(),
+                id = x.Key.ID
             });
+
+            List<RatedMovie> ratedMovies = new List<RatedMovie>();
+            foreach(var averageRating in averageRatings)
+            {
+                var movie = _context.Movies.FirstOrDefault(x => x.Id == averageRating.id);
+                ratedMovies.Add(new RatedMovie
+                {
+                    id = averageRating.id,
+                    title = movie.Title,
+                    runningTime = movie.RunningTime,
+                    yearOfRelease = movie.ReleaseYear,
+                    averageRating = averageRating.averageRating
+                });
+            }
+
+            var returnedItems = ratedMovies.OrderByDescending(x => x.averageRating).ThenBy(x => x.title).Take(5);
 
             return Ok(returnedItems);
 
@@ -62,13 +73,13 @@ namespace FreeWheelMovies.Api.Controllers
 
             var movieList = _context.Movies.Where(x => resultSet.Contains(x.Id));
 
-            var returnedItems = movieList.Select(x => new
+            var returnedItems = movieList.Select(x => new RatedMovie
             {
                 id = x.Id,
                 title = x.Title,
-                yearOfRelease = x.ReleaseYear.Year,
+                yearOfRelease = x.ReleaseYear,
                 runningTime = x.RunningTime,
-                averageRating = x.Ratings.Average(y => y.UserRating)
+                averageRating = x.Ratings.Average(y => y.UserRating).RoundToNearestHalf()
             });
 
             return Ok(returnedItems);

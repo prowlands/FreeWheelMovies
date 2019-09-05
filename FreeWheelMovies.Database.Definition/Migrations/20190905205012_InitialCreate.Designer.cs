@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreeWheelMovies.Database.Migrations
 {
     [DbContext(typeof(MoviesContext))]
-    [Migration("20190826123754_InitialCreate")]
+    [Migration("20190905205012_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace FreeWheelMovies.Database.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("FreeWheelMovies.Database.Models.MovieGenres", b =>
+            modelBuilder.Entity("FreeWheelMovies.Database.Models.MovieGenre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -104,7 +104,7 @@ namespace FreeWheelMovies.Database.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("FreeWheelMovies.Database.Models.MovieGenres", b =>
+            modelBuilder.Entity("FreeWheelMovies.Database.Models.MovieGenre", b =>
                 {
                     b.HasOne("FreeWheelMovies.Database.Models.Genre", "Genre")
                         .WithMany("MovieGenres")
